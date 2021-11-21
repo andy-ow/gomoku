@@ -1,5 +1,5 @@
 
 
 class Game():
-
+    pass
 
