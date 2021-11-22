@@ -22,7 +22,10 @@ class TestGomokuGame(TestCase):
         print("\nEND of history.\n")
         print("Last position\n")
         game.print_board()
+        print("\nLast position with switched X and O\n")
+        game.print_switched_board()
         print("\nEND printing.")
+
 
     def test_make_move2(self):
         game = GomokuGame(self.size)

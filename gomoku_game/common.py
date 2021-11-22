@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+WINNING_NUMBER = 5
 
 class State(Enum):
     PLAYING = auto()

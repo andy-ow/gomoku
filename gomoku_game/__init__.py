@@ -2,13 +2,13 @@ import sys
 
 from gomoku_game.Board import Board
 from gomoku_game.Check_win import CheckWin
-from gomoku_game.common import Player, State
+from gomoku_game.common import Player, State, WINNING_NUMBER
 
 
 class GomokuGame:
-    WINNING_NUMBER = 5
 
     def __init__(self, size):
+        self.size = size
         self.__board = Board(size)
         self.state = State.PLAYING
         self.winner = None
@@ -27,7 +27,7 @@ class GomokuGame:
         else:
             self.__board.make_move(pos, stone)
             if CheckWin.is_winning(board=self.__board, last_move=pos, last_stone=self.__current_player.stone(),
-                                   winning_number=self.WINNING_NUMBER):
+                                   winning_number=WINNING_NUMBER):
                 self.state = State.END
                 self.winner = self.__current_player
                 self.__current_player = None
@@ -51,6 +51,9 @@ class GomokuGame:
 
     def print_board(self):
         print(self.__board)
+
+    def print_switched_board(self):
+        Board.print_board(self.__board.get_board_with_switched_xo(), self.size)
 
     @staticmethod
     def print_history(history, size):

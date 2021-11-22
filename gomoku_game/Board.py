@@ -80,6 +80,7 @@ class Board:
 
     @staticmethod
     def print_board(board, size):
+        # print(type(board), board.shape)
         size_x, size_y = size
         board_string = ''
         for y in range(size_y):
