@@ -1,5 +1,7 @@
 import sys
 
+import numpy as np
+
 from gomoku_game.Board import Board
 from gomoku_game.Check_win import CheckWin
 from gomoku_game.common import State, Player, WINNING_NUMBER
@@ -13,8 +15,8 @@ class GomokuGame:
         self.state = State.PLAYING
         self.winner = None
         self.current_player = Player.X
-        self.history_x = []
-        self.history_o = []
+        self.history_x: list[np.ndarray, (int, int)] = []
+        self.history_o: list[np.ndarray, (int, int)] = []
 
     def make_move(self, pos):
         if self.state != State.PLAYING:
