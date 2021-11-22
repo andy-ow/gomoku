@@ -23,3 +23,6 @@ class Player(Enum):
 
     def opponent(self):
         return Player.O if self == Player.X else Player.X
+
+    def name(self):
+        return "Player X" if self == Player.X else "Player O"

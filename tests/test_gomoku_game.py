@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from gomoku_game import GomokuGame, State, Player
+from gomoku_game.GomokuGame import GomokuGame
+from gomoku_game.common import State, Player
 
 
 class TestGomokuGame(TestCase):
