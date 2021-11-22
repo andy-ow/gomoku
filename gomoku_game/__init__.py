@@ -19,8 +19,8 @@ class GomokuGame:
     def make_move(self, pos):
         if self.state != State.PLAYING:
             sys.exit("Game already over. Not possible to make moves. Current state: " + str(self.state))
-        self.add_to_history(pos)
-        stone = self.current_player.stone
+        self.__add_to_history(pos)
+        stone = self.current_player.stone()
         if not self.__board.is_move_legal(pos, stone):
             self.winner = self.current_player.opponent()
             self.state = State.END
@@ -36,12 +36,12 @@ class GomokuGame:
                 self.winner = None
                 self.current_player = None
             else:
-                self.next_player()
+                self.__next_player()
 
-    def next_player(self):
+    def __next_player(self):
         self.current_player = self.current_player.opponent()
 
-    def add_to_history(self, pos):
+    def __add_to_history(self, pos):
         if self.current_player is Player.X:
             self.history_x.append([self.__board.get_board(), pos])
         elif self.current_player is Player.O:
@@ -49,8 +49,11 @@ class GomokuGame:
         else:
             sys.exit("Wrong player.")
 
+    def print_board(self):
+        print(self.__board)
+
     @staticmethod
-    def enemy(player):
+    def __enemy(player):
         if player == State.TURN_PLAYER_X: return State.TURN_PLAYER_O
         if player == State.TURN_PLAYER_O: return State.TURN_PLAYER_X
         sys.exit("Invalid player parameter: " + player)

@@ -6,7 +6,7 @@ from gomoku_game.common import Stone
 
 X_BOARD = 0
 O_BOARD = 1
-EMPTY = 0
+_EMPTY = 0
 TAKEN = 1
 
 
@@ -20,8 +20,8 @@ class Board:
         self.__max_number_of_moves = self.size_x * self.size_y
 
     def get_xy_position(self, pos):
-        x,y = pos
-        if not self.__xy_is_within_limits(pos) or self.__xy_is_empty(pos): return EMPTY
+        x, y = pos
+        if not self.__xy_is_within_limits(pos) or self.__xy_is_empty(pos): return Stone.EMPTY
         if self.__board[x, y, X_BOARD] == TAKEN: return Stone.X
         if self.__board[x, y, O_BOARD] == TAKEN: return Stone.O
         sys.exit('Board position not empty, not X, and not O: ' + self.__board[x, y, X_BOARD] + ' ' + self.__board[
@@ -47,7 +47,7 @@ class Board:
 
     def __xy_is_empty(self, pos):
         x, y = pos
-        return self.__board[x, y, X_BOARD] == EMPTY and self.__board[x, y, O_BOARD] == EMPTY
+        return self.__board[x, y, X_BOARD] == _EMPTY and self.__board[x, y, O_BOARD] == _EMPTY
 
     def __set_x(self, pos):
         x, y = pos
@@ -64,11 +64,19 @@ class Board:
 
     def get_board_with_switched_xo(self):
         switched_board = Board.__new_empty_board(self.size_x, self.size_y)
-        board_x = self.__board[:,:,X_BOARD]
+        board_x = self.__board[:, :, X_BOARD]
         board_o = self.__board[:, :, O_BOARD]
-        switched_board[:,:,X_BOARD] = board_o
-        switched_board[:,:,O_BOARD] = board_x
+        switched_board[:, :, X_BOARD] = board_o
+        switched_board[:, :, O_BOARD] = board_x
         return switched_board
+
+    def __str__(self):
+        o = ''
+        for y in range(self.size_y):
+            for x in range(self.size_x):
+                o = o + str(self.get_xy_position((x,y)))
+            o += '\n'
+        return o
 
     @staticmethod
     def __new_empty_board(size_x, size_y):

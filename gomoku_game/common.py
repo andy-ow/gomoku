@@ -8,6 +8,10 @@ class State(Enum):
 class Stone(Enum):
     X = 'X'
     O = 'O'
+    EMPTY = '·'
+
+    def __str__(self):
+        return self.value
 
 class Player(Enum):
     X = auto()
