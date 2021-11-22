@@ -60,7 +60,7 @@ class Board:
         self.__board[x, y, O_BOARD] = TAKEN
 
     def get_board(self):
-        return self.__board
+        return self.__board.__copy__()
 
     def get_board_with_switched_xo(self):
         switched_board = Board.__new_empty_board(self.size_x, self.size_y)
@@ -71,12 +71,27 @@ class Board:
         return switched_board
 
     def __str__(self):
-        o = ''
+        board_string = ''
         for y in range(self.size_y):
             for x in range(self.size_x):
-                o = o + str(self.get_xy_position((x,y)))
-            o += '\n'
-        return o
+                board_string = board_string + str(self.get_xy_position((x,y)))
+            board_string += '\n'
+        return board_string
+
+    @staticmethod
+    def print_board(board, size):
+        size_x, size_y = size
+        board_string = ''
+        for y in range(size_y):
+            for x in range(size_x):
+                stone = Stone.EMPTY
+                position_value = board[x,y,:]
+                if position_value[X_BOARD]==TAKEN: stone = Stone.X
+                if position_value[O_BOARD]==TAKEN: stone = Stone.O
+                board_string = board_string + str(stone)
+            board_string += '\n'
+        print(board_string)
+
 
     @staticmethod
     def __new_empty_board(size_x, size_y):
