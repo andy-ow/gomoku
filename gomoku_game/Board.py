@@ -19,7 +19,7 @@ class Board:
         self.__number_of_moves = 0
         self.__max_number_of_moves = self.size_x * self.size_y
 
-    def get_xy_position(self, pos):
+    def get_xy_position(self, pos: (int, int)):
         x, y = pos
         if not self.__xy_is_within_limits(pos) or self.__xy_is_empty(pos): return Stone.EMPTY
         if self.__board[x, y, X_BOARD] == TAKEN: return Stone.X
@@ -27,34 +27,34 @@ class Board:
         sys.exit('Board position not empty, not X, and not O: ' + self.__board[x, y, X_BOARD] + ' ' + self.__board[
             x, y, O_BOARD] + '\n')
 
-    def is_move_legal(self, pos, stone):
+    def is_move_legal(self, pos: (int, int), stone: Stone):
         return (stone == Stone.X or stone == Stone.O) and self.__xy_is_within_limits(pos) and self.__xy_is_empty(pos)
 
     def board_is_full(self):
         return self.__number_of_moves >= self.__max_number_of_moves
 
-    def make_move(self, pos, stone):
+    def make_move(self, pos: (int, int), stone: Stone):
         if stone is Stone.X:
             self.__set_x(pos)
         elif stone is Stone.O:
             self.__set_o(pos)
         else:
-            sys.exit("make move with wrong stone: " + stone)
+            sys.exit("make move with wrong stone: " + str(stone))
 
-    def __xy_is_within_limits(self, pos):
+    def __xy_is_within_limits(self, pos: (int, int)):
         x, y = pos
         return 0 <= x < self.size_x and 0 <= y < self.size_y
 
-    def __xy_is_empty(self, pos):
+    def __xy_is_empty(self, pos: (int, int)):
         x, y = pos
         return self.__board[x, y, X_BOARD] == _EMPTY and self.__board[x, y, O_BOARD] == _EMPTY
 
-    def __set_x(self, pos):
+    def __set_x(self, pos: (int, int)):
         x, y = pos
         self.__number_of_moves += 1
         self.__board[x, y, X_BOARD] = TAKEN
 
-    def __set_o(self, pos):
+    def __set_o(self, pos: (int, int)):
         x, y = pos
         self.__number_of_moves += 1
         self.__board[x, y, O_BOARD] = TAKEN
@@ -79,7 +79,7 @@ class Board:
         return board_string
 
     @staticmethod
-    def print_board(board, size):
+    def print_board(board: np.ndarray, size):
         # print(type(board), board.shape)
         size_x, size_y = size
         board_string = ''
@@ -95,5 +95,5 @@ class Board:
 
 
     @staticmethod
-    def __new_empty_board(size_x, size_y):
+    def __new_empty_board(size_x: int, size_y: int):
         return np.zeros((size_x, size_y, 2))
