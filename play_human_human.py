@@ -1,12 +1,7 @@
-from typing import List, Tuple
 
-from Agent import Agent
 from HumanPlayer import HumanPlayer
 from Match import Match
-from ai.AiPlayer import AiPlayer
-from ai.Types import GameState, Action
 from gomoku_game import GomokuGame
-from gomoku_game.Types import Position
 
 if __name__ == '__main__':
     board_size = (8, 8)
