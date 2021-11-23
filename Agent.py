@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ai.GameState import GameState
-from ai.Action import Action
+from ai.Types import Action, GameState
 
 
 class Agent(ABC):
@@ -11,6 +10,5 @@ class Agent(ABC):
         pass
 
     @abstractmethod
-    def learn(self, game_states__actions: list[GameState, Action]):
+    def learn(self, game_states__actions: list[(GameState, Action)]):
         pass
-

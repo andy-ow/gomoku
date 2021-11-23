@@ -1,61 +1,79 @@
 import sys
+from typing import List, Tuple
 
-import numpy as np
-
+from Game import Game
+from ai.Types import GameState, Action
 from gomoku_game.Board import Board
 from gomoku_game.Check_win import CheckWin
-from gomoku_game.common import State, Player, WINNING_NUMBER
+from gomoku_game.Types import Position
+from gomoku_game.common import Player, WINNING_NUMBER
 
 
-class GomokuGame:
+class GomokuGame(Game):
 
     def __init__(self, size):
         self.size = size
-        self.__board = Board(size)
-        self.state = State.PLAYING
+        self._board = Board(size)
+        self._is_playing = True
         self.winner = None
-        self.current_player = Player.X
-        self.history_x: list[np.ndarray, (int, int)] = []
-        self.history_o: list[np.ndarray, (int, int)] = []
+        self._current_player = Player.X
+        self._history_x: List[Tuple[GameState, Action]] = []
+        self._history_o: List[Tuple[GameState, Action]] = []
 
-    def make_move(self, pos):
-        if self.state != State.PLAYING:
-            sys.exit("Game already over. Not possible to make moves. Current state: " + str(self.state))
-        self.__add_to_history(pos)
-        stone = self.current_player.stone()
-        if not self.__board.is_move_legal(pos, stone):
-            self.winner = self.current_player.opponent()
-            self.state = State.END
+    def make_move(self, pos: Position):
+        if not self._is_playing:
+            sys.exit("Game already over. Not possible to make moves. Current state: " + str(self._is_playing))
+        self._add_to_history(pos)
+        stone = self._current_player.stone()
+        if not self._board.is_move_legal(pos, stone):
+            self.winner = self._current_player.opponent()
+            self._is_playing = False
         else:
-            self.__board.make_move(pos, stone)
-            if CheckWin.is_winning(board=self.__board, last_move=pos, last_stone=self.current_player.stone(),
+            self._board.make_move(pos, stone)
+            if CheckWin.is_winning(board=self._board, last_move=pos, last_stone=self._current_player.stone(),
                                    winning_number=WINNING_NUMBER):
-                self.state = State.END
-                self.winner = self.current_player
-                self.current_player = None
-            elif self.__board.board_is_full():
-                self.state = State.END
+                self._is_playing = False
+                self.winner = self._current_player
+                self._current_player = None
+            elif self._board.board_is_full():
+                self._is_playing = False
                 self.winner = None
-                self.current_player = None
+                self._current_player = None
             else:
-                self.__next_player()
+                self._next_player()
 
-    def __next_player(self):
-        self.current_player = self.current_player.opponent()
+    def _next_player(self):
+        self._current_player = self._current_player.opponent()
 
-    def __add_to_history(self, pos):
-        if self.current_player is Player.X:
-            self.history_x.append([self.__board.get_board(), pos])
-        elif self.current_player is Player.O:
-            self.history_o.append([self.__board.get_board_with_switched_xo(), pos])
+    def _add_to_history(self, pos: Position):
+        if self._current_player is Player.X:
+            self._history_x.append((self._board.get_board(), Action(pos)))
+        elif self._current_player is Player.O:
+            self._history_o.append((self._board.get_board_with_switched_xo(), Action(pos)))
         else:
             sys.exit("Wrong player.")
 
+    def get_history_of_winning_moves(self) -> List[Tuple[GameState, Action]]:
+        if self.winner is None:
+            sys.exit("No history of winning moves. Game still in progress.")
+        if self.winner == Player.X:
+            return self._history_x
+        if self.winner == Player.O:
+            return self._history_o
+        return list()
+
+    def print_game(self):
+        self.print_board()
+
     def print_board(self):
-        print(self.__board)
+        print(self._board)
 
     def print_switched_board(self):
-        Board.print_board(self.__board.get_board_with_switched_xo(), self.size)
+        Board.print_board(self._board.get_board_with_switched_xo(), self.size)
+
+    @property
+    def is_playing(self) -> bool:
+        return self._is_playing
 
     @staticmethod
     def print_history(history, size):
@@ -63,8 +81,7 @@ class GomokuGame:
             Board.print_board(board, size)
             print("Move: " + str(move) + "\n")
 
-    @staticmethod
-    def __enemy(player):
-        if player == State.TURN_PLAYER_X: return State.TURN_PLAYER_O
-        if player == State.TURN_PLAYER_O: return State.TURN_PLAYER_X
-        sys.exit("Invalid player parameter: " + player)
+    @property
+    def current_player(self):
+        return self._current_player
+

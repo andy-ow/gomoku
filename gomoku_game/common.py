@@ -2,9 +2,7 @@ from enum import Enum, auto
 
 WINNING_NUMBER = 5
 
-class State(Enum):
-    PLAYING = auto()
-    END = auto()
+
 
 class Stone(Enum):
     X = 'X'
@@ -13,6 +11,7 @@ class Stone(Enum):
 
     def __str__(self):
         return self.value
+
 
 class Player(Enum):
     X = auto()

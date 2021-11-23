@@ -1,4 +1,5 @@
 from gomoku_game.Board import Board
+from gomoku_game.Types import Position
 
 
 class CheckWin:
@@ -14,7 +15,7 @@ class CheckWin:
                 while True:
                     x += step_x
                     y += step_y
-                    if board.get_xy_position((x, y)) == last_stone:
+                    if board.get_xy_position(Position((x, y))) == last_stone:
                         count += 1
                     else:
                         break
