@@ -1,6 +1,7 @@
 import sys
 from typing import List, Tuple
 
+from Agent import Agent
 from Game import Game
 from ai.Types import GameState, Action
 from gomoku_game.Board import Board
@@ -11,7 +12,17 @@ from gomoku_game.common import Player, WINNING_NUMBER
 
 class GomokuGame(Game):
 
-    def __init__(self, size):
+    # first player plays X, second player is O
+    def get_current_player(self) -> Agent:
+        if self._current_player == Player.X:
+            return self._players[0]
+        if self._current_player == Player.O:
+            return self._players[1]
+
+    def __init__(self, players: List[Agent], size: Tuple[int, int]):
+        if not len(players) == 2: sys.exit(
+            "Gumoku is a game for exactly 2 players. Current number of players: " + str(len(players)))
+        self._players = players
         self.size = size
         self._board = Board(size)
         self._is_playing = True
@@ -69,19 +80,18 @@ class GomokuGame(Game):
         print(self._board)
 
     def print_switched_board(self):
-        Board.print_board(self._board.get_board_with_switched_xo(), self.size)
+        Board.print_board(self._board.get_board_with_switched_xo())
 
     @property
     def is_playing(self) -> bool:
         return self._is_playing
 
     @staticmethod
-    def print_history(history, size):
+    def print_history(history):
         for (board, move) in history:
-            Board.print_board(board, size)
+            Board.print_board(board)
             print("Move: " + str(move) + "\n")
 
     @property
     def current_player(self):
         return self._current_player
-

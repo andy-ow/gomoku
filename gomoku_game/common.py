@@ -3,7 +3,6 @@ from enum import Enum, auto
 WINNING_NUMBER = 5
 
 
-
 class Stone(Enum):
     X = 'X'
     O = 'O'
@@ -16,6 +15,12 @@ class Stone(Enum):
 class Player(Enum):
     X = auto()
     O = auto()
+
+    def __init__(self, agent):
+        self._agent = agent
+
+    def get_agent(self):
+        return self._agent
 
     def stone(self):
         return Stone.X if self == Player.X else Stone.O

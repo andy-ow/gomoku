@@ -8,6 +8,10 @@ from ai.Types import GameState, Action
 
 class AiPlayer(Agent):
 
+    @property
+    def is_human(self) -> bool:
+        return False
+
     def choose_action(self, game_state: GameState) -> Action:
         return self.model.predict(game_state)
 

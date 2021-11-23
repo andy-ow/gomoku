@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List, Tuple
 
 from ai.Types import Action, GameState
 
@@ -10,5 +11,10 @@ class Agent(ABC):
         pass
 
     @abstractmethod
-    def learn(self, game_states__actions: list[(GameState, Action)]):
+    def learn(self, game_states__actions: List[Tuple[GameState, Action]]):
+        pass
+
+    @property
+    @abstractmethod
+    def is_human(self) -> bool:
         pass
