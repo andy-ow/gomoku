@@ -28,10 +28,10 @@ class Match:
             gamestate = self.game.get_current_gamestate()
             action = current_player.choose_action(gamestate)
             if show_game:
-                print("Playing action: " + str(action))
+                print("Player " + current_player.get_name + " plays action: " + str(action))
             self.game.make_move(action)
         winner = self.game.get_winner()
-        winner.learn(self.game.get_history_of_winning_moves())
         if show_game:
             self.game.print_game()
             print("Game over. The winner is: " + winner.get_name)
+        winner.learn(self.game.get_history_of_winning_moves())

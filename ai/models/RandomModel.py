@@ -2,12 +2,12 @@ from random import Random
 
 import numpy as np
 
-from ai.Model import Model
+from ai.AiModel import AiModel
 from ai.Types import Action, GameState
 from gomoku_game.Board import Board
 
 
-class RandomModel(Model):
+class RandomModel(AiModel):
 
     def __init__(self, size):
         self.size_x, self.size_y = size
@@ -20,9 +20,10 @@ class RandomModel(Model):
         print("Training data: ")
         for data in zip(_train_position, _train_correct_move):
             board, move = data
-            print(Board.print_board(board))
+            Board.print_board(board)
             print("Correct move: " + str(move))
+            print("----")
         print("End training.")
 
     def predict(self, game_state) -> Action:
-        return Action((self.random.randint(0, self.size_x), self.random.randint(0, self.size_y)))
+        return Action((self.random.randint(0, self.size_x - 1), self.random.randint(0, self.size_y - 1)))

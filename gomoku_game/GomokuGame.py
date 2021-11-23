@@ -35,6 +35,8 @@ class GomokuGame(Game):
         self._history_o: List[Tuple[GameState, Action]] = []
 
     def make_move(self, pos: Position):
+        if pos is None:
+            raise Exception("Error: make_move: Action cannot be None.")
         if not self._is_playing:
             sys.exit("Game already over. Not possible to make moves. Current state: " + str(self._is_playing))
         self._add_to_history(pos)
@@ -80,7 +82,7 @@ class GomokuGame(Game):
         self.print_board()
 
     def print_board(self):
-        print(self._board)
+        self._board.print()
 
     def print_switched_board(self):
         Board.print_board(self._board.get_board_with_switched_xo())

@@ -3,7 +3,7 @@ from typing import List, Tuple
 import numpy as np
 
 from Agent import Agent
-from ai.Model import Model
+from ai.AiModel import AiModel
 from ai.Types import GameState, Action
 
 
@@ -20,7 +20,7 @@ class AiPlayer(Agent):
     def choose_action(self, game_state: GameState) -> Action:
         return self.model.predict(game_state)
 
-    def __init__(self, name: str, model: Model, shape, after_how_many_positions_to_train: int):
+    def __init__(self, name: str, model: AiModel, shape, after_how_many_positions_to_train: int):
         self._name = name
         self.shape = shape
         self.after_how_many_positions_to_train: int = after_how_many_positions_to_train

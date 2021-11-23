@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from ai.Types import Action
 
 
-class Model(ABC):
+class AiModel(ABC):
 
     @abstractmethod
     def __init__(self, size):
