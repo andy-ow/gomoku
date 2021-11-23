@@ -1,11 +1,22 @@
 from typing import List, Tuple
 
 from Agent import Agent
+from HumanPlayer import HumanPlayer
+from Match import Match
+from ai.AiPlayer import AiPlayer
 from ai.Types import GameState, Action
 from gomoku_game import GomokuGame
 from gomoku_game.Types import Position
-class DummyAgent(Agent):
 
+if __name__ == '__main__':
+    board_size = (8, 8)
+    match = Match(HumanPlayer("Player 1"), HumanPlayer("Player 2"), GomokuGame, board_size)
+    match.play()
+
+
+
+"""
+class DummyAgent(Agent):
     def choose_action(self, game_state: GameState) -> Action:
         pass
 
@@ -18,12 +29,12 @@ class DummyAgent(Agent):
 
 
 if __name__ == '__main__':
-    game = GomokuGame(size=(9,9), players=[DummyAgent(), DummyAgent()])
+    game = GomokuGame(size=(9, 9), players=[DummyAgent(), DummyAgent()])
     print("Input x and y, seperated by space. For example\n 1 2\n\n")
     while game.is_playing:
         game.print_board()
         print("It is player's " + game.current_player.name() + " turn.")
         x, y = map(int, input().strip().split(" "))
-        game.make_move(Position((x,y)))
+        game.make_move(Position((x, y)))
     print("Game over. The winner is player: " + game.winner.name())
-
+"""

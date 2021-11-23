@@ -9,13 +9,18 @@ from ai.Types import GameState, Action
 class AiPlayer(Agent):
 
     @property
+    def get_name(self) -> str:
+        return self._name
+
+    @property
     def is_human(self) -> bool:
         return False
 
     def choose_action(self, game_state: GameState) -> Action:
         return self.model.predict(game_state)
 
-    def __init__(self, shape, after_how_many_positions_to_train: int):
+    def __init__(self, name, shape, after_how_many_positions_to_train: int):
+        self._name = name
         self.shape = shape
         self.after_how_many_positions_to_train: int = after_how_many_positions_to_train
         self.__train_position = []

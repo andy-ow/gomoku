@@ -1,5 +1,5 @@
 import sys
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from Agent import Agent
 from Game import Game
@@ -12,21 +12,24 @@ from gomoku_game.common import Player, WINNING_NUMBER
 
 class GomokuGame(Game):
 
-    # first player plays X, second player is O
+    def get_winner(self) -> Optional[Agent]:
+        return self._players[self._winner]
+
+    def get_current_gamestate(self) -> GameState:
+        return self._board.get_board()
+
     def get_current_player(self) -> Agent:
-        if self._current_player == Player.X:
-            return self._players[0]
-        if self._current_player == Player.O:
-            return self._players[1]
+        return self._players[self._current_player]
 
     def __init__(self, players: List[Agent], size: Tuple[int, int]):
         if not len(players) == 2: sys.exit(
             "Gumoku is a game for exactly 2 players. Current number of players: " + str(len(players)))
-        self._players = players
+        # first player plays X, second player is O
+        self._players = {Player.X: players[0], Player.O: players[1]}
         self.size = size
         self._board = Board(size)
         self._is_playing = True
-        self.winner = None
+        self._winner = None
         self._current_player = Player.X
         self._history_x: List[Tuple[GameState, Action]] = []
         self._history_o: List[Tuple[GameState, Action]] = []
@@ -37,18 +40,18 @@ class GomokuGame(Game):
         self._add_to_history(pos)
         stone = self._current_player.stone()
         if not self._board.is_move_legal(pos, stone):
-            self.winner = self._current_player.opponent()
+            self._winner = self._current_player.opponent()
             self._is_playing = False
         else:
             self._board.make_move(pos, stone)
             if CheckWin.is_winning(board=self._board, last_move=pos, last_stone=self._current_player.stone(),
                                    winning_number=WINNING_NUMBER):
                 self._is_playing = False
-                self.winner = self._current_player
+                self._winner = self._current_player
                 self._current_player = None
             elif self._board.board_is_full():
                 self._is_playing = False
-                self.winner = None
+                self._winner = None
                 self._current_player = None
             else:
                 self._next_player()
@@ -65,11 +68,11 @@ class GomokuGame(Game):
             sys.exit("Wrong player.")
 
     def get_history_of_winning_moves(self) -> List[Tuple[GameState, Action]]:
-        if self.winner is None:
+        if self._winner is None:
             sys.exit("No history of winning moves. Game still in progress.")
-        if self.winner == Player.X:
+        if self._winner == Player.X:
             return self._history_x
-        if self.winner == Player.O:
+        if self._winner == Player.O:
             return self._history_o
         return list()
 

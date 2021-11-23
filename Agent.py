@@ -16,5 +16,10 @@ class Agent(ABC):
 
     @property
     @abstractmethod
+    def get_name(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
     def is_human(self) -> bool:
         pass
