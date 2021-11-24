@@ -7,6 +7,7 @@ from Game import Game
 class Match:
 
     def __init__(self, player1: Agent, player2: Agent, game_class: Type[Game], config):
+        self.winner = None
         self.player1 = player1
         self.player2 = player2
         self.human_is_playing = any([player1.is_human, player2.is_human])
@@ -15,6 +16,7 @@ class Match:
         self.game = game_class([player1, player2], config)
 
     def restart(self):
+        self.winner = None
         self.game = self.game_class([self.player1, self.player2], self.config)
 
     def play(self, visible: Optional[bool] = None):
@@ -30,8 +32,10 @@ class Match:
             if show_game:
                 print("Player " + current_player.get_name + " plays action: " + str(action))
             self.game.make_move(action)
-        winner = self.game.get_winner()
+        self.winner = self.game.get_winner()
         if show_game:
             self.game.print_game()
-            print("Game over. The winner is: " + winner.get_name)
-        winner.learn(self.game.get_history_of_winning_moves())
+            print("Game over. The winner is: " + self.winner.get_name)
+        self.player1.learn(self.game.get_history_of_winning_moves())
+        self.player2.learn(self.game.get_history_of_winning_moves())
+

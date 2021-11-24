@@ -16,7 +16,11 @@ class GomokuGame(Game):
         return self._players[self._winner]
 
     def get_current_gamestate(self) -> GameState:
-        return self._board.get_board()
+        if self._current_player == Player.X:
+            return self._board.get_board()
+        if self._current_player == Player.O:
+            return self._board.get_board_with_switched_xo()
+        raise Exception("Error: Current player wrong.")
 
     def get_current_player(self) -> Agent:
         return self._players[self._current_player]

@@ -1,3 +1,6 @@
+import os
+
+import numpy as np
 from keras import Model
 from sklearn.model_selection import train_test_split
 
@@ -9,56 +12,55 @@ from tensorflow.keras import layers
 
 
 class SimpleSequentialModel(AiModel):
-    def __init__(self, size):
+    def __init__(self, size, epochs):
+        # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         self.size_x, self.size_y = size
+        self.epochs = epochs
         self.model = self.create_model()
         print(self.model.summary())
 
-    def train(self, _train_position, _train_correct_move):
-        x_train, x_test, y_train, y_test = train_test_split(_train_position, _train_correct_move, test_size = 0.2)
-        for data in [x_train, x_test, y_train, y_test]:
-            data = data.astype("float32")
+    def train(self, _train_position: np.ndarray, _train_correct_move_xy: np.ndarray):
+        _train_correct_move = np.array(list(map(lambda z: tf.keras.utils.to_categorical(int(z[0]*self.size_y+z[1]), num_classes=361), _train_correct_move_xy)))
+        _train_position = np.array(_train_position)
         print("Fit model on training data")
+        print(len(_train_position))
         history = self.model.fit(
-            x_train,
-            y_train,
-            batch_size=64,
-            epochs=20,
+            _train_position,
+            _train_correct_move,
+            batch_size=256,
+            epochs=self.epochs,
             # We pass some validation for
             # monitoring validation loss and metrics
             # at the end of each epoch
-            validation_data=(x_test, y_test),
+            # validation_data=(x_test, y_test),
         )
 
     def predict(self, game_state) -> Action:
         predictions_matrix = self.model.predict(game_state)
-        print("predictions_matrix")
-        print("type: " + str(type(predictions_matrix)))
-        print(predictions_matrix.shape)
-        original_shape = predictions_matrix.shape
-        flat_matrix = predictions_matrix.reshape((1, self.size_x*self.size_y))/predictions_matrix.sum()
-        print("Flat matrix: " + str(flat_matrix))
-        print("Flat matrix sum: " + str(flat_matrix.sum()))
+        # original_shape = predictions_matrix.shape
+        flat_matrix = predictions_matrix.reshape((1, self.size_x*self.size_y))/(predictions_matrix.sum()+0.00000001)
         randomly_chosen_number = tf.random.categorical(tf.math.log(flat_matrix), 1).numpy()[0][0]
-        print(randomly_chosen_number, flat_matrix[[0],randomly_chosen_number])
-        prediction = tf.zeros((self.size_x*self.size_y)).reshape(original_shape)
-
-
-
-        return Action((1,1))
+        # print(randomly_chosen_number, flat_matrix[[0],randomly_chosen_number])
+        x = randomly_chosen_number // self.size_y
+        y = randomly_chosen_number % self.size_y
+        return Action((x,y))
 
     def create_model(self) -> Model:
         model = keras.Sequential()
-        model.add(keras.Input(shape=(self.size_x, self.size_y, 2)))  # 250x250 RGB images
-        model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=1, kernel_size=3, padding='same', activation="relu"))
-        model.compile(
+        model.add(keras.Input(shape=[self.size_x, self.size_y, 2]))
+        model.add(layers.Conv2D(filters=6, kernel_size=3, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=6, kernel_size=3, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=6, kernel_size=3, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=1, kernel_size=3, padding='same'))
+        model.add(layers.Flatten())
+        # model.add(layers.Dense(361))
+        model.add(layers.Activation('softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+        """model.compile(
             optimizer=keras.optimizers.RMSprop(),  # Optimizer
             # Loss function to minimize
             loss=keras.losses.SparseCategoricalCrossentropy(),
             # List of metrics to monitor
-            metrics=[keras.metrics.SparseCategoricalAccuracy()],
-        )
+            metrics=[keras.metrics.SparseCategoricalCrossentropy()],
+        )"""
         return model
