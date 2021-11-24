@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+import tensorflow as tf
 import numpy as np
 
 from Agent import Agent
@@ -18,7 +19,7 @@ class AiPlayer(Agent):
         return False
 
     def choose_action(self, game_state: GameState) -> Action:
-        return self.model.predict(game_state)
+        return self.model.predict(game_state.reshape(1, *game_state.shape))
 
     def __init__(self, name: str, model: AiModel, shape, after_how_many_positions_to_train: int):
         self._name = name
@@ -31,8 +32,8 @@ class AiPlayer(Agent):
     def learn(self, list_of_positions__correct_moves: List[Tuple[np.ndarray, Action]]):
         if len(list_of_positions__correct_moves)>0:
             assert list_of_positions__correct_moves[0][0].shape == self.shape
-            self.__train_position.extend([data[0] for data in list_of_positions__correct_moves])
-            self.__train_correct_move.extend([data[1] for data in list_of_positions__correct_moves])
+            self.__train_position.extend(tf.convert_to_tensor([data[0] for data in list_of_positions__correct_moves]))
+            self.__train_correct_move.extend(tf.convert_to_tensor([data[1] for data in list_of_positions__correct_moves]))
             self.__train()
 
     def __train(self):

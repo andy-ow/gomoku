@@ -32,15 +32,19 @@ class SimpleSequentialModel(AiModel):
 
     def predict(self, game_state) -> Action:
         predictions_matrix = self.model.predict(game_state)
-        
+        print("predictions_matrix")
+        print("type: " + str(type(predictions_matrix)))
+        print(predictions_matrix.shape)
+        flat_matrix = predictions_matrix.reshape((1, self.size_x*self.size_y))
         return Action((1,1))
 
     def create_model(self) -> Model:
         model = keras.Sequential()
         model.add(keras.Input(shape=(self.size_x, self.size_y, 2)))  # 250x250 RGB images
-        model.add(layers.Conv2D(filters=10, kernel_size=5, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=10, kernel_size=5, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=10, kernel_size=5, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=1, kernel_size=3, padding='same', activation="relu"))
         model.compile(
             optimizer=keras.optimizers.RMSprop(),  # Optimizer
             # Loss function to minimize
