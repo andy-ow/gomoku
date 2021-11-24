@@ -20,7 +20,7 @@ class SimpleSequentialModel(AiModel):
         print(self.model.summary())
 
     def train(self, _train_position: np.ndarray, _train_correct_move_xy: np.ndarray):
-        _train_correct_move = np.array(list(map(lambda z: tf.keras.utils.to_categorical(int(z[0]*self.size_y+z[1]), num_classes=361), _train_correct_move_xy)))
+        _train_correct_move = np.array(list(map(lambda z: tf.keras.utils.to_categorical(int(z[0]*self.size_y+z[1]), num_classes=81), _train_correct_move_xy)))
         _train_position = np.array(_train_position)
         print("Fit model on training data")
         print(len(_train_position))
@@ -48,10 +48,10 @@ class SimpleSequentialModel(AiModel):
     def create_model(self) -> Model:
         model = keras.Sequential()
         model.add(keras.Input(shape=[self.size_x, self.size_y, 2]))
-        model.add(layers.Conv2D(filters=6, kernel_size=3, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=6, kernel_size=3, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=6, kernel_size=3, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=1, kernel_size=3, padding='same'))
+        model.add(layers.Conv2D(filters=6, kernel_size=6, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=6, kernel_size=6, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=6, kernel_size=6, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=1, kernel_size=1, padding='same'))
         model.add(layers.Flatten())
         # model.add(layers.Dense(361))
         model.add(layers.Activation('softmax'))
