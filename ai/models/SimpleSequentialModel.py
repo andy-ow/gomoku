@@ -35,7 +35,16 @@ class SimpleSequentialModel(AiModel):
         print("predictions_matrix")
         print("type: " + str(type(predictions_matrix)))
         print(predictions_matrix.shape)
-        flat_matrix = predictions_matrix.reshape((1, self.size_x*self.size_y))
+        original_shape = predictions_matrix.shape
+        flat_matrix = predictions_matrix.reshape((1, self.size_x*self.size_y))/predictions_matrix.sum()
+        print("Flat matrix: " + str(flat_matrix))
+        print("Flat matrix sum: " + str(flat_matrix.sum()))
+        randomly_chosen_number = tf.random.categorical(tf.math.log(flat_matrix), 1).numpy()[0][0]
+        print(randomly_chosen_number, flat_matrix[[0],randomly_chosen_number])
+        prediction = tf.zeros((self.size_x*self.size_y)).reshape(original_shape)
+
+
+
         return Action((1,1))
 
     def create_model(self) -> Model:
