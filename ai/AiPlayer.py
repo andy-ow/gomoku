@@ -32,6 +32,7 @@ class AiPlayer(Agent):
         self.max_positions_to_train = max_positions_to_train
 
     def learn(self, list_of_positions__correct_moves: List[Tuple[np.ndarray, Action]]):
+        self.games_played += 1
         if len(list_of_positions__correct_moves)>0:
             assert list_of_positions__correct_moves[0][0].shape == self.shape
             # print(self._name + ": Adding positions: " + str(len(list_of_positions__correct_moves)))

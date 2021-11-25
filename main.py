@@ -7,8 +7,8 @@ from gomoku_game import GomokuGame
 import tensorflow as tf
 
 
-def print_stats(winner_stats):
-    for player, score in [lambda z: (z, winner_stats[z]), winner_stats.items.sort(key=lambda z: z[1], inverse=True)]:
+def print_stats(stats: dict):
+    for player, score in sorted(list(stats.items()), key=lambda z: z[1], reverse=True):
         print(player, score)
 
 
@@ -19,17 +19,18 @@ if __name__ == '__main__':
 
     board_size = (9, 9)
     ai_players = []
-    for layers_no in range(1, 7):
-        for epochs in [1, 10, 50]:
-            for how_many_games_remember in [100, 1000, 10000]:
+    for layers_no in [3, 4, 5, 6, 7]:
+        for epochs in [10]:
+            for max_positions_to_train in [10000]:
                 for model in [SimpleSequentialModel, SimpleSequentialModel2]:
-                    # ai_player = AiPlayer(name="AI__layers_"+str(layers_no)+"__epochs_"+str(epochs)+"__games_remember_"+str(how_many_games_remember)+"__model_"+str(model.model_name()),
-                    ai_player = AiPlayer(name="AI__la" + str(layers_no) + "__e" + str(epochs) + "__g" + str(
-                        how_many_games_remember) + "__" + str(model.model_name()),
-                                         model=model(board_size, epochs=epochs, layers_no=layers_no),
-                                         shape=(9, 9, 2),
-                                         after_how_many_games_to_train=100,
-                                         max_positions_to_train=how_many_games_remember)
+                    for after_how_many_to_train in [10, 50]:
+                        # ai_player = AiPlayer(name="AI__layers_"+str(layers_no)+"__epochs_"+str(epochs)+"__max_positions_"+str(how_many_games_remember)+"__model_"+str(model.model_name()),
+                        ai_player = AiPlayer(name="La" + str(layers_no) + "__e" + str(epochs) + "__max" + str(
+                            max_positions_to_train) + "__a" + str(after_how_many_to_train) + "__" + str(model.model_name()),
+                                             model=model(board_size, epochs=epochs, layers_no=layers_no),
+                                             shape=(9, 9, 2),
+                                             after_how_many_games_to_train=after_how_many_to_train,
+                                             max_positions_to_train=max_positions_to_train)
                     ai_players.append(ai_player)
     human_player = HumanPlayer(name="Human")
     matches = []
@@ -37,8 +38,7 @@ if __name__ == '__main__':
         for player2 in ai_players:
             match = Match(player1, player2, GomokuGame, board_size)
             matches.append(match)
-            match = Match(player2, player1, GomokuGame, board_size)
-            matches.append(match)
+
     rounds = 0
     games = 0
     winner_stats = {}
@@ -50,6 +50,8 @@ if __name__ == '__main__':
             ai_match.play(visible=visible)
             games += 1
             print("", end=".")
+            if games % 100 ==0:
+                print()
             if ai_match.player1 != ai_match.player2:
                 winner_stats[ai_match.winner.get_name] += 1
             ai_match.restart()
