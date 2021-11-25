@@ -52,6 +52,8 @@ if __name__ == '__main__':
             print("", end=".")
             if games % 100 ==0:
                 print()
+                print("Games: " + str(games))
+                print_stats(winner_stats)
             if ai_match.player1 != ai_match.player2:
                 winner_stats[ai_match.winner.get_name] += 1
             ai_match.restart()
