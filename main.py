@@ -8,8 +8,8 @@ import tensorflow as tf
 
 
 def print_stats(stats: dict):
-    for player, score in sorted(list(stats.items()), key=lambda z: z[1]/z[0].games_played, reverse=True):
-        print(player.get_name, score, score/player.games_played)
+    for player, score in sorted(list(stats.items()), key=lambda z: z[1] / z[0].games_played, reverse=True):
+        print(player.get_name, '   ' + str(score) + '/' + str(player.games_played) + '   ', score / player.games_played)
 
 
 if __name__ == '__main__':
@@ -26,7 +26,8 @@ if __name__ == '__main__':
                     for after_how_many_to_train in [10, 50]:
                         # ai_player = AiPlayer(name="AI__layers_"+str(layers_no)+"__epochs_"+str(epochs)+"__max_positions_"+str(how_many_games_remember)+"__model_"+str(model.model_name()),
                         ai_player = AiPlayer(name="La" + str(layers_no) + "__e" + str(epochs) + "__max" + str(
-                            max_positions_to_train) + "__a" + str(after_how_many_to_train) + "__" + str(model.model_name()),
+                            max_positions_to_train) + "__a" + str(after_how_many_to_train) + "__" + str(
+                            model.model_name()),
                                              model=model(board_size, epochs=epochs, layers_no=layers_no),
                                              shape=(9, 9, 2),
                                              after_how_many_games_to_train=after_how_many_to_train,
@@ -50,7 +51,7 @@ if __name__ == '__main__':
             ai_match.play(visible=visible)
             games += 1
             print("", end=".")
-            if games % 100 ==0:
+            if games % 100 == 0:
                 print()
                 print("Games: " + str(games))
                 print_stats(winner_stats)
