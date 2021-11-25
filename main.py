@@ -20,7 +20,7 @@ if __name__ == '__main__':
     board_size = (9, 9)
     ai_players = []
     for layers_no in [3, 4, 5, 6, 7]:
-        for epochs in [10]:
+        for epochs in [10, 30]:
             for max_positions_to_train in [10000]:
                 for model in [SimpleSequentialModel, SimpleSequentialModel2]:
                     for after_how_many_to_train in [10, 50]:
@@ -31,7 +31,7 @@ if __name__ == '__main__':
                                              shape=(9, 9, 2),
                                              after_how_many_games_to_train=after_how_many_to_train,
                                              max_positions_to_train=max_positions_to_train)
-                    ai_players.append(ai_player)
+                        ai_players.append(ai_player)
     human_player = HumanPlayer(name="Human")
     matches = []
     for player1 in ai_players:
