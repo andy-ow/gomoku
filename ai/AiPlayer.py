@@ -37,13 +37,13 @@ class AiPlayer(Agent):
             # print(self._name + ": Adding positions: " + str(len(list_of_positions__correct_moves)))
             self.train_position.extend(tf.convert_to_tensor([data[0] for data in list_of_positions__correct_moves]))
             self.train_correct_move.extend(data[1] for data in list_of_positions__correct_moves)
-            if self.games_played % self.after_how_many_games_to_train == 0: self.__train()
+            if (self.games_played+1) % self.after_how_many_games_to_train == 0:
+                self.__train()
 
     def __train(self):
         print(self._name + ": Learn: current list of positions: " + str(len(self.train_position)))
-        if self.games_played % self.after_how_many_games_to_train == 0:
-            self.model.train(self.train_position, self.train_correct_move)
-            if len(self.train_position) > self.max_positions_to_train:
-                self.train_correct_move = self.train_correct_move[len(self.train_position)//2:]
-                self.train_position = self.train_position[len(self.train_position)//2:]
+        self.model.train(self.train_position, self.train_correct_move)
+        if len(self.train_position) > self.max_positions_to_train:
+            self.train_correct_move = self.train_correct_move[len(self.train_position)//2:]
+            self.train_position = self.train_position[len(self.train_position)//2:]
 

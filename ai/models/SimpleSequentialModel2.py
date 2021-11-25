@@ -25,7 +25,7 @@ class SimpleSequentialModel2(AiModel):
         self.epochs = epochs
         self.layers_no = layers_no
         self.model = self.create_model()
-        print(self.model.summary())
+        self.model.summary()
 
     def train(self, _train_position: np.ndarray, _train_correct_move_xy: np.ndarray):
         # _train_correct_move = np.array(list(map(lambda z: tf.keras.utils.to_categorical(int(z[0]*self.size_y+z[1]), num_classes=81), _train_correct_move_xy)))
