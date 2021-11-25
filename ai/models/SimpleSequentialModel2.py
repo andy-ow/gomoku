@@ -11,11 +11,12 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 
-class SimpleSequentialModel(AiModel):
+class SimpleSequentialModel2(AiModel):
     def __init__(self, size, epochs):
         # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         self.size_x, self.size_y = size
-        self.translate_move_xy_to_onehot, self.translate_move_xy1D_to_xy = self.create_move_xy_onehot_translation(self.size_x, self.size_y)
+        self.translate_move_xy_to_onehot, self.translate_move_xy1D_to_xy = self.create_move_xy_onehot_translation(
+            self.size_x, self.size_y)
         self.epochs = epochs
         self.model = self.create_model()
         print(self.model.summary())
@@ -45,14 +46,14 @@ class SimpleSequentialModel(AiModel):
         # print(randomly_chosen_number, flat_matrix[[0],randomly_chosen_number])
         # x = randomly_chosen_number // self.size_y
         # y = randomly_chosen_number % self.size_y
-        (x,y) = self.translate_move_xy1D_to_xy[randomly_chosen_number]
+        (x, y) = self.translate_move_xy1D_to_xy[randomly_chosen_number]
         return Action((x,y))
 
     def create_model(self) -> Model:
         model = keras.Sequential()
         model.add(keras.Input(shape=[self.size_x, self.size_y, 2]))
-        model.add(layers.Conv2D(filters=6, kernel_size=6, padding='same', activation="relu"))
-        model.add(layers.Conv2D(filters=6, kernel_size=6, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=60, kernel_size=8, padding='same', activation="relu"))
+        model.add(layers.Conv2D(filters=30, kernel_size=6, padding='same', activation="relu"))
         model.add(layers.Conv2D(filters=6, kernel_size=6, padding='same', activation="relu"))
         model.add(layers.Conv2D(filters=1, kernel_size=1, padding='same'))
         model.add(layers.Flatten())
@@ -67,5 +68,3 @@ class SimpleSequentialModel(AiModel):
             metrics=[keras.metrics.SparseCategoricalCrossentropy()],
         )"""
         return model
-
-

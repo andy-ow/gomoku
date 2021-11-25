@@ -2,6 +2,7 @@ from HumanPlayer import HumanPlayer
 from Match import Match
 from ai.AiPlayer import AiPlayer
 from ai.models.SimpleSequentialModel import SimpleSequentialModel
+from ai.models.SimpleSequentialModel2 import SimpleSequentialModel2
 from gomoku_game import GomokuGame
 import tensorflow as tf
 
@@ -11,10 +12,10 @@ if __name__ == '__main__':
         gpus[0], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)])
 
     board_size = (9, 9)
-    ai_player1 = AiPlayer(name="Player 1", model=SimpleSequentialModel(board_size, 100), shape=(9, 9, 2),
-                          after_how_many_positions_to_train=100)
-    ai_player2 = AiPlayer(name="Player 2", model=SimpleSequentialModel(board_size, 1000), shape=(9, 9, 2),
+    ai_player1 = AiPlayer(name="Player 1", model=SimpleSequentialModel(board_size, 10), shape=(9, 9, 2),
                           after_how_many_positions_to_train=200)
+    ai_player2 = AiPlayer(name="Player 2", model=SimpleSequentialModel2(board_size, 200), shape=(9, 9, 2),
+                          after_how_many_positions_to_train=10000)
     human_player = HumanPlayer(name="Human")
     match_ai_vs_ai = Match(ai_player1, ai_player2, GomokuGame, board_size)
     match_ai_vs_ai2 = Match(ai_player2, ai_player1, GomokuGame, board_size)
@@ -32,7 +33,7 @@ if __name__ == '__main__':
         match_human_vs_ai2.restart()
         games += 1
         winner_stats = {ai_player1.get_name: 0, ai_player2.get_name: 0}
-        for i in range(50):
+        for i in range(1000):
             for ai_match in ai_matches:
                 visible = True if i % 25 == 0 else False
                 ai_match.play(visible=visible)

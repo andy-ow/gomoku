@@ -41,5 +41,6 @@ class AiPlayer(Agent):
         print(self._name + ": Learn: current list of positions: " + str(len(self.train_position)))
         if len(self.train_position) > self.after_how_many_positions_to_train:
             self.model.train(self.train_position, self.train_correct_move)
-            self.train_correct_move = []
-            self.train_position = []
+            self.train_correct_move = self.train_correct_move[self.after_how_many_positions_to_train//2:]
+            self.train_position = self.train_position[self.after_how_many_positions_to_train//2:]
+
