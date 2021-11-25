@@ -8,8 +8,8 @@ import tensorflow as tf
 
 
 def print_stats(stats: dict):
-    for player, score in sorted(list(stats.items()), key=lambda z: z[1], reverse=True):
-        print(player, score)
+    for player, score in sorted(list(stats.items()), key=lambda z: z[1]/z[0].games_played, reverse=True):
+        print(player.get_name, score, score/player.games_played)
 
 
 if __name__ == '__main__':
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     games = 0
     winner_stats = {}
     for player in ai_players:
-        winner_stats[player.get_name] = 0
+        winner_stats[player] = 0
     while True:
         for ai_match in matches:
             visible = True if rounds != 0 and rounds % 10 == 0 else False
@@ -55,7 +55,7 @@ if __name__ == '__main__':
                 print("Games: " + str(games))
                 print_stats(winner_stats)
             if ai_match.player1 != ai_match.player2:
-                winner_stats[ai_match.winner.get_name] += 1
+                winner_stats[ai_match.winner] += 1
             ai_match.restart()
         rounds += 1
         print()
