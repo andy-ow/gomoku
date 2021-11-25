@@ -34,7 +34,7 @@ class AiPlayer(Agent):
     def learn(self, list_of_positions__correct_moves: List[Tuple[np.ndarray, Action]]):
         if len(list_of_positions__correct_moves)>0:
             assert list_of_positions__correct_moves[0][0].shape == self.shape
-            print(self._name + ": Adding positions: " + str(len(list_of_positions__correct_moves)))
+            # print(self._name + ": Adding positions: " + str(len(list_of_positions__correct_moves)))
             self.train_position.extend(tf.convert_to_tensor([data[0] for data in list_of_positions__correct_moves]))
             self.train_correct_move.extend(data[1] for data in list_of_positions__correct_moves)
             if self.games_played % self.after_how_many_games_to_train == 0: self.__train()

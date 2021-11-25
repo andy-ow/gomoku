@@ -24,6 +24,6 @@ class AiModel(ABC):
                 onehot = tf.keras.utils.to_categorical(int(x*self.size_y+y), num_classes=size_x*size_y)
                 translate_move_xy_to_onehot[(x,y)] = onehot
                 number1D = onehot.argmax()
-                print((x, y), onehot, number1D)
+                # print((x, y), onehot, number1D)
                 translate_move_xy1D_to_xy[number1D] = (x,y)
         return translate_move_xy_to_onehot, translate_move_xy1D_to_xy

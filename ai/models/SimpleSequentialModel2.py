@@ -12,7 +12,9 @@ from tensorflow.keras import layers
 
 
 class SimpleSequentialModel2(AiModel):
-    def __str__(self):
+
+    @staticmethod
+    def model_name():
         return "B"
 
     def __init__(self, size, epochs, layers_no):
@@ -27,10 +29,10 @@ class SimpleSequentialModel2(AiModel):
 
     def train(self, _train_position: np.ndarray, _train_correct_move_xy: np.ndarray):
         # _train_correct_move = np.array(list(map(lambda z: tf.keras.utils.to_categorical(int(z[0]*self.size_y+z[1]), num_classes=81), _train_correct_move_xy)))
-        _train_correct_move = np.array(list(map(lambda z: self.translate_move_xy_to_onehot[(z.numpy()[0],z.numpy()[1])], _train_correct_move_xy)))
+        _train_correct_move = np.array(list(map(lambda z: self.translate_move_xy_to_onehot[z], _train_correct_move_xy)))
         _train_position = np.array(_train_position)
-        print("Fit model on training data")
-        print(len(_train_position))
+        # print("Fit model on training data")
+        # print(len(_train_position))
         history = self.model.fit(
             _train_position,
             _train_correct_move,
