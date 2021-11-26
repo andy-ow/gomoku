@@ -17,12 +17,14 @@ class SimpleSequentialModel(AiModel):
     def model_name():
         return "A"
 
-    def __init__(self, size, epochs, layers_no):
+    def __init__(self, size, epochs, layers_no, filters_no, kernel_size):
         # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         self.size_x, self.size_y = size
         self.translate_move_xy_to_onehot, self.translate_move_xy1D_to_xy = self.create_move_xy_onehot_translation(self.size_x, self.size_y)
         self.epochs = epochs
         self.layers_no = layers_no
+        self.filers_no = filters_no
+        self.kernel_size = kernel_size
         self.model = self.create_model()
         self.model.summary()
 
@@ -58,7 +60,7 @@ class SimpleSequentialModel(AiModel):
         model = keras.Sequential()
         model.add(keras.Input(shape=[self.size_x, self.size_y, 2]))
         for i in range(self.layers_no):
-            model.add(layers.Conv2D(filters=10, kernel_size=3, padding='same', activation="relu"))
+            model.add(layers.Conv2D(filters=self.filers_no, kernel_size=self.kernel_size, padding='same', activation="relu"))
         model.add(layers.Conv2D(filters=1, kernel_size=1, padding='same'))
         model.add(layers.Flatten())
         # model.add(layers.Dense(361))
