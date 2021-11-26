@@ -14,6 +14,7 @@ class RandomModel(AiModel):
         self.random = Random()
 
     def train(self, _train_position, _train_correct_move):
+        return
         print("Training.")
         print("type _train_position[0]: " + str(type(_train_position[0])))
         print("type _correct_move[0]: " + str(type(_train_correct_move[0])))
